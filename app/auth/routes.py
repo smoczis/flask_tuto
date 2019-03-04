@@ -5,12 +5,14 @@ from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from flask_babel import _, get_locale
 
-from app import app, db
-from app.auth.forms import LoginForm, RegistrationForm, EditProfileForm, PostForm
-from app.models import User, Post
+from app import db
+from app.auth import bp
+from app.auth.forms import LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm
+from app.models import User
+from app.auth.email import send_password_reset_email
 
 
-@app.route('/login', methods=['POST', 'GET'])
+@bp.route('/login', methods=['POST', 'GET'])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
@@ -28,13 +30,13 @@ def login():
     return render_template("login.html", title="Sign In", form=form)
 
 
-@app.route('/logout')
+@bp.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('index'))
 
 
-@app.route('/register', methods=['POST', 'GET'])
+@bp.route('/register', methods=['POST', 'GET'])
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
@@ -49,6 +51,21 @@ def register():
     return render_template("register.html", title='Register', form=form)
 
 
-@app.route('/reset_password_request', methods=['POST', 'GET']):
-def reset_password():
-    pass
+@bp.route('/reset_password_request', methods=['POST', 'GET'])
+def reset_password_request():
+    if current_user.is_authenticated:
+        return redirect(url_for("main.index"))
+    form = ResetPasswordRequestForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            send_password_reset_email(user)
+        flash(_("Check your email for instructions to reset your password"))
+        return redirect(url_for("auth.login"))
+    return render_template("auth/reset_password_request.html", title=_("Reset Password"), form=form)
+
+
+bp.route('/reset_password/<token>', methods=['Post', 'Get'])
+def reset_password(token):
+    if current_user.is_athenticated:
+        return redirect(url_for("main.index"))
