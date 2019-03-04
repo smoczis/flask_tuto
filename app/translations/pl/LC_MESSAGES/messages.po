@@ -193,6 +193,14 @@ msgstr "tutaj"
 msgid " to register!"
 msgstr " aby stworzyć konto"
 
+#: app/templates/login.html:15
+msgid "Forgot Your Password?"
+msgstr "Nie pamiętasz hasła?"
+
+#: app/templates/login.html:16
+msgid "Click here to reset it"
+msgstr "Klinkij by zresetować hasło"
+
 #: app/templates/user.html:8
 msgid "User"
 msgstr "Użytkownik"

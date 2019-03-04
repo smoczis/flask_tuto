@@ -48,3 +48,7 @@ def register():
         return redirect(url_for('login'))
     return render_template("register.html", title='Register', form=form)
 
+
+@app.route('/reset_password_request', methods=['POST', 'GET']):
+def reset_password():
+    pass

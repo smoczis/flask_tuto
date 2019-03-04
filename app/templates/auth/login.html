@@ -11,4 +11,8 @@
     <br>
     <p>{{ _("New User? Click ") }}<a href="{{ url_for('register') }}"><b>{{ _("here") }}</b></a>
         {{ _(" to register!") }}</p>
+    <p>
+        {{ _("Forgot Your Password?") }}
+        <a href="{{ url_for('auth.reset_password_request') }}">{{ _("Click here to reset it") }}</a>
+    </p>
 {% endblock %}
